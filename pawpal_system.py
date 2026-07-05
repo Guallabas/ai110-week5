@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -86,6 +86,36 @@ class Scheduler:
             tasks,
             key=lambda task: (self._time_to_minutes(task.time), task.priority.lower()),
         )
+
+    def sort_by_time(self, tasks: List[Task]) -> List[Task]:
+        """Return tasks sorted only by their scheduled time (HH:MM)."""
+        return sorted(tasks, key=lambda t: self._time_to_minutes(t.time))
+
+    def filter_tasks(self, tasks: List[Task], completed: Optional[bool] = None) -> List[Task]:
+        """Filter tasks by completion status.
+
+        If `completed` is None, return tasks unchanged.
+        """
+        if completed is None:
+            return list(tasks)
+        return [t for t in tasks if t.completed is completed]
+
+    def tasks_for_pet(self, owner: Owner, pet_name: str) -> List[Task]:
+        """Return tasks for a specific pet by name."""
+        for pet in owner.pets:
+            if pet.name == pet_name:
+                return pet.get_tasks()
+        return []
+
+    def sort_and_filter(self, owner: Owner, *, completed: Optional[bool] = None, pet_name: Optional[str] = None) -> List[Task]:
+        """Collect, optionally filter by pet/completion, then return sorted tasks."""
+        if pet_name:
+            tasks = self.tasks_for_pet(owner, pet_name)
+        else:
+            tasks = self.retrieve_tasks(owner)
+
+        tasks = self.filter_tasks(tasks, completed=completed)
+        return self.sort_by_time(tasks)
 
     def build_daily_schedule(self, owner: Owner) -> List[Task]:
         """Build a sorted daily schedule from the owner's pets."""
