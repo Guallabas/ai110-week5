@@ -37,6 +37,14 @@ def main() -> None:
     for t in scheduler.filter_tasks(owner.get_all_tasks(), completed=False):
         print(f"- {t}")
 
+    print("\nConflict detection:")
+    conflicts = scheduler.find_conflicts(owner)
+    if conflicts:
+        for w in conflicts:
+            print(f"! {w}")
+    else:
+        print("No conflicts detected.")
+
 
 if __name__ == "__main__":
     main()

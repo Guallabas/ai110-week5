@@ -154,6 +154,25 @@ class Scheduler:
         pet.add_task(new_task)
         return new_task
 
+    def find_conflicts(self, owner: Owner) -> List[str]:
+        """Detect tasks that are scheduled at the exact same time.
+
+        Returns a list of human-readable warning messages. Uses an exact-match
+        strategy: tasks with identical `time` strings are considered conflicts.
+        """
+        time_map: dict[str, list[tuple[str, Task]]] = {}
+        for pet in owner.pets:
+            for task in pet.get_tasks():
+                time_map.setdefault(task.time, []).append((pet.name, task))
+
+        warnings: List[str] = []
+        for t, entries in time_map.items():
+            if len(entries) > 1:
+                details = "; ".join(f"{pet_name}: {task.description}" for pet_name, task in entries)
+                warnings.append(f"Conflict at {t}: {details}")
+
+        return warnings
+
     def build_daily_schedule(self, owner: Owner) -> List[Task]:
         """Build a sorted daily schedule from the owner's pets."""
         tasks = self.retrieve_tasks(owner)
