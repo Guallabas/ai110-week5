@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import List, Optional
+from datetime import date, timedelta
 
 
 @dataclass
@@ -11,6 +12,7 @@ class Task:
     frequency: str = "daily"
     completed: bool = False
     priority: str = "medium"
+    date: Optional[str] = None
 
     def mark_complete(self) -> None:
         """Mark the task as complete."""
@@ -23,7 +25,8 @@ class Task:
     def __str__(self) -> str:
         """Return a readable summary of the task."""
         status = "✓" if self.completed else "•"
-        return f"{status} {self.time} - {self.description} ({self.frequency})"
+        date_part = f" {self.date}" if self.date else ""
+        return f"{status} {self.time}{date_part} - {self.description} ({self.frequency})"
 
 
 @dataclass
@@ -116,6 +119,40 @@ class Scheduler:
 
         tasks = self.filter_tasks(tasks, completed=completed)
         return self.sort_by_time(tasks)
+
+    def mark_task_complete(self, owner: Owner, pet_name: str, task: Task) -> Optional[Task]:
+        """Mark a task complete for a given pet and schedule the next occurrence if recurring.
+
+        Returns the newly created Task for the next occurrence, or None if not recurring.
+        """
+        # find the pet
+        pet = next((p for p in owner.pets if p.name == pet_name), None)
+        if pet is None:
+            return None
+
+        # mark the provided task object complete
+        task.mark_complete()
+
+        # handle recurrence
+        freq = (task.frequency or "").lower()
+        if freq not in ("daily", "weekly"):
+            return None
+
+        # compute next date
+        today = date.today()
+        delta = timedelta(days=1) if freq == "daily" else timedelta(weeks=1)
+        next_date = today + delta
+
+        new_task = Task(
+            description=task.description,
+            time=task.time,
+            frequency=task.frequency,
+            priority=task.priority,
+            date=next_date.isoformat(),
+        )
+
+        pet.add_task(new_task)
+        return new_task
 
     def build_daily_schedule(self, owner: Owner) -> List[Task]:
         """Build a sorted daily schedule from the owner's pets."""

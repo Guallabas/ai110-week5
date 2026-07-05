@@ -27,8 +27,13 @@ def main() -> None:
         print(f"- {t}")
 
     print("\nFiltered tasks (pending only):")
-    # mark one task complete
-    owner.pets[0].tasks[0].mark_complete()
+    # mark one task complete using scheduler to create next occurrence
+    completed_task = owner.pets[0].tasks[0]
+    new_occurrence = scheduler.mark_task_complete(owner, "Mochi", completed_task)
+    print(f"Marked complete: {completed_task}")
+    if new_occurrence:
+        print(f"Created next occurrence: {new_occurrence}")
+
     for t in scheduler.filter_tasks(owner.get_all_tasks(), completed=False):
         print(f"- {t}")
 
