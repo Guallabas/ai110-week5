@@ -67,13 +67,13 @@
 
 **a. What you tested**
 
-- What behaviors did you test?
-- Why were these tests important?
+- I tested task completion, task addition, sorting by time, recurring task creation for daily tasks, and conflict detection for duplicate times.
+- These behaviors were important because they cover the core scheduling logic and the most likely failure points in a simple pet-care planner.
 
 **b. Confidence**
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+- I am fairly confident that the current scheduler works correctly for the core scenarios covered by the tests.
+- If I had more time, I would test edge cases such as tasks with no time, pets with no tasks, and overlapping tasks with different durations.
 
 ---
 
