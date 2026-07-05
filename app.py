@@ -67,12 +67,30 @@ if owner.pets:
         st.session_state.owner = owner
         st.success(f"Added task to {selected_pet.name}.")
 
-    st.write(f"Tasks for {selected_pet.name}:")
-    if selected_pet.tasks:
-        for task in selected_pet.tasks:
-            st.write(f"- {task}")
+    st.write(f"Pending tasks for {selected_pet.name}:")
+    pending_tasks = scheduler.filter_tasks(selected_pet.get_tasks(), completed=False)
+    sorted_tasks = scheduler.sort_by_time(pending_tasks)
+    if sorted_tasks:
+        task_rows = [
+            {
+                "Time": task.time,
+                "Task": task.description,
+                "Frequency": task.frequency,
+                "Priority": task.priority,
+            }
+            for task in sorted_tasks
+        ]
+        st.table(task_rows)
     else:
-        st.info("No tasks yet for this pet.")
+        st.info("No pending tasks for this pet.")
+
+    conflicts = scheduler.find_conflicts(owner)
+    if conflicts:
+        st.warning("Potential scheduling conflicts:")
+        for conflict in conflicts:
+            st.warning(conflict)
+    else:
+        st.success("No scheduling conflicts detected.")
 else:
     st.info("Add a pet first to create tasks.")
 

@@ -90,16 +90,22 @@ This project includes a set of simple scheduling features implemented in the log
 | Conflict detection | `Scheduler.find_conflicts` | Lightweight exact-time conflict detection. Returns readable warnings when two or more tasks share the same `HH:MM` time.
 | Recurring tasks | `Scheduler.mark_task_complete` | When a `daily` or `weekly` task is completed, a new task instance for the next occurrence is created (uses task `date` if present, otherwise today).
 
-These features are intentionally simple to keep the code easy to reason about. See `pawpal_system.py` for the method implementations and `main.py` for simple CLI demos.
+These features are intentionally simple to keep the code easy to reason about. See `pawpal_system.py` for the method implementations, [diagrams/uml_final.mmd](diagrams/uml_final.mmd) for the final UML diagram, and `main.py` for simple CLI demos.
+
+## ▶️ Run the App
+
+Start the Streamlit interface locally with:
+
+```bash
+streamlit run app.py
+```
 
 ## 📸 Demo Walkthrough
 
-Describe your app in numbered steps so a reader can follow along without watching a video:
+1. Open the app and enter an owner name.
+2. Add one or more pets to the profile.
+3. Create care tasks for a selected pet, including a time, frequency, and priority.
+4. Review the pending tasks table, which is sorted by time and updated by the scheduler logic.
+5. Check the conflict warnings and click Generate schedule to view the daily plan produced by the backend.
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
-
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+**Screenshot or video** *(optional)*: Add a screenshot of the Streamlit UI once you have one.

@@ -4,31 +4,18 @@
 
 **a. Initial design**
 
-- My initial UML design centered on four main classes: Owner, Pet, Task, and Scheduler.
-- Owner is responsible for storing the owner’s name, preferences, and the pets they manage.
-- Pet represents an individual animal and holds its name, species, and related tasks.
-- Task captures a single care activity, including its duration, priority, category, and optional time window.
-- Scheduler is responsible for turning the pet’s tasks into a daily plan based on the available information.
-- Core user actions for the app:
-  - Add a pet to the system
-  - Add or edit care tasks for a pet
-  - Generate a daily care plan for the pet
-- Main building blocks for the system:
-  - Owner: stores the owner name, pet care preferences, and a list of pets; methods may include adding a pet and updating preferences.
-  - Pet: stores the pet name, species, and associated care tasks; methods may include adding or removing tasks and retrieving tasks for a day.
-  - Task: stores the task title, duration, priority, category, and optional time constraints; methods may include marking a task complete or checking whether it is urgent.
-  - Scheduler: uses the owner, pet, and task information to create a daily plan; methods may include sorting tasks, applying constraints, and generating a schedule.
+- The initial design centered on four main classes: Owner, Pet, Task, and Scheduler.
+- Owner stores the pet owner’s name, preferences, and the pets they manage.
+- Pet represents an individual animal and holds the animal’s name, species, and related tasks.
+- Task captures a single care activity, including its description, time, frequency, priority, completion status, and optional date.
+- Scheduler converts the stored tasks into a useful daily plan by sorting, filtering, and warning about conflicts.
 
 **b. Design changes**
 
-- I kept the original structure mostly intact, but I simplified the initial design so it would be easier to implement as a clean Python skeleton.
-- I chose to use dataclasses for Task and Pet to make the objects easier to define and extend later.
-- I also kept the Scheduler methods lightweight at this stage, since the focus for Phase 1 was on structure rather than full scheduling logic.
-
-**b. Design changes**
-
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+- The design stayed mostly intact, but it became more concrete during implementation.
+- I used Python dataclasses for Task, Pet, and Owner because they made the object model simple to define and extend.
+- The Scheduler grew from a simple placeholder into a small utility layer that handles sorting, completion filtering, recurrence, and conflict detection.
+- I also chose to keep the logic separate from the UI so the Streamlit app could use the same backend behavior as the console demo.
 
 ---
 
@@ -36,44 +23,43 @@
 
 **a. Constraints and priorities**
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+- The scheduler currently considers task time, completion state, frequency, and priority.
+- Time is the primary constraint because the app is meant to present a daily plan in chronological order.
+- Priority influences ordering when two tasks have similar timing, and completion status helps the UI show only pending tasks.
+- Frequency and date support recurring-task behavior when a task is marked complete.
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-
-- Tradeoff: The scheduler currently detects conflicts using an exact-time match (tasks with identical `HH:MM` times). It does not attempt to detect overlapping tasks based on duration or more complex calendar semantics.
-
-- Why reasonable: Exact-time conflict detection is lightweight and easy to reason about; it gives immediate, actionable warnings without requiring task duration parsing, timezone handling, or a more complex interval-overlap algorithm. For many simple pet-care scenarios (fixed feeding/walk times), exact matches catch the most common problems while keeping the scheduler simple and predictable.
+- One tradeoff is that conflict detection is intentionally simple. It checks for exact matches in task times, rather than trying to reason about overlapping intervals or task duration.
+- This is reasonable because the current app is focused on a lightweight pet-care planner. Exact-time checks are easy to understand, fast to compute, and sufficient for many common scheduling mistakes such as assigning the same time to two tasks.
 
 ---
 
 ## 3. AI Collaboration
 
-**a. How you used AI**
+**a. How I used AI**
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
+- I used AI assistance to help structure the project, turn the UML design into Python classes, and refine the Streamlit integration.
+- It was especially helpful for stepping through the implementation in smaller phases and for suggesting test cases around scheduling behavior.
 
 **b. Judgment and verification**
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
+- I did not accept every suggestion automatically. For example, I verified the scheduler behavior directly in the code and through pytest rather than trusting an implementation that looked plausible but was not yet tested.
+- I used the test suite and manual inspection of the app flow to confirm that the logic worked as intended.
 
 ---
 
 ## 4. Testing and Verification
 
-**a. What you tested**
+**a. What I tested**
 
 - I tested task completion, task addition, sorting by time, recurring task creation for daily tasks, and conflict detection for duplicate times.
-- These behaviors were important because they cover the core scheduling logic and the most likely failure points in a simple pet-care planner.
+- These checks cover the core behaviors needed for the scheduler to be useful in a simple pet-care scenario.
 
 **b. Confidence**
 
-- I am fairly confident that the current scheduler works correctly for the core scenarios covered by the tests.
-- If I had more time, I would test edge cases such as tasks with no time, pets with no tasks, and overlapping tasks with different durations.
+- I am confident that the current implementation works well for the core scenarios covered by the tests.
+- If I had more time, I would add more edge-case tests for invalid times, empty task lists, and more complex overlap handling.
 
 ---
 
@@ -81,12 +67,15 @@
 
 **a. What went well**
 
-- What part of this project are you most satisfied with?
+- The strongest part of this project was connecting the backend logic to the UI without losing the clarity of the core object model.
+- The scheduler and tests became a reliable foundation for the app.
 
-**b. What you would improve**
+**b. What I would improve**
 
-- If you had another iteration, what would you improve or redesign?
+- I would improve the scheduler next by supporting more realistic conflict detection, such as overlapping tasks based on duration and start/end times.
+- I would also expand the UI to show more explanation for why a plan was generated.
 
 **c. Key takeaway**
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+- A good system design becomes much easier to build and verify when the core classes are simple, the responsibilities are clear, and the behavior is tested early.
+
