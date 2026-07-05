@@ -55,19 +55,27 @@ Today's Schedule for Jordan:
 
 ## 🧪 Testing PawPal+
 
-```bash
-# Run the full test suite:
-pytest
+Run the automated test suite with:
 
-# Run with coverage:
-pytest --cov
+```bash
+python -m pytest
 ```
+
+The current test suite covers:
+- task completion status
+- adding tasks to a pet
+- sorting tasks by time
+- recurring task creation for daily tasks
+- conflict detection for duplicate times
 
 Sample test output:
 
+```text
+.....                                                                    [100%]
+5 passed in 0.03s
 ```
-# Paste your pytest output here
-```
+
+Confidence level: ⭐⭐⭐⭐☆
 
 ## 📐 Smarter Scheduling
 
