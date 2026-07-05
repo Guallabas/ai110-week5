@@ -73,12 +73,16 @@ Sample test output:
 
 > Fill in once you've implemented scheduling logic.
 
+This project includes a set of simple scheduling features implemented in the logic layer. Methods and behaviors:
+
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | `Scheduler.sort_by_time`, `Scheduler.sort_tasks` | Sorts tasks by `HH:MM` time and optionally by priority.
+| Filtering | `Scheduler.filter_tasks`, `Scheduler.tasks_for_pet`, `Scheduler.sort_and_filter` | Filter by completion status or pet name; can combine with sorting.
+| Conflict detection | `Scheduler.find_conflicts` | Lightweight exact-time conflict detection. Returns readable warnings when two or more tasks share the same `HH:MM` time.
+| Recurring tasks | `Scheduler.mark_task_complete` | When a `daily` or `weekly` task is completed, a new task instance for the next occurrence is created (uses task `date` if present, otherwise today).
+
+These features are intentionally simple to keep the code easy to reason about. See `pawpal_system.py` for the method implementations and `main.py` for simple CLI demos.
 
 ## 📸 Demo Walkthrough
 
