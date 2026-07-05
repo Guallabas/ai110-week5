@@ -4,8 +4,11 @@
 
 **a. Initial design**
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+- My initial UML design centered on four main classes: Owner, Pet, Task, and Scheduler.
+- Owner is responsible for storing the owner’s name, preferences, and the pets they manage.
+- Pet represents an individual animal and holds its name, species, and related tasks.
+- Task captures a single care activity, including its duration, priority, category, and optional time window.
+- Scheduler is responsible for turning the pet’s tasks into a daily plan based on the available information.
 - Core user actions for the app:
   - Add a pet to the system
   - Add or edit care tasks for a pet
@@ -15,6 +18,12 @@
   - Pet: stores the pet name, species, and associated care tasks; methods may include adding or removing tasks and retrieving tasks for a day.
   - Task: stores the task title, duration, priority, category, and optional time constraints; methods may include marking a task complete or checking whether it is urgent.
   - Scheduler: uses the owner, pet, and task information to create a daily plan; methods may include sorting tasks, applying constraints, and generating a schedule.
+
+**b. Design changes**
+
+- I kept the original structure mostly intact, but I simplified the initial design so it would be easier to implement as a clean Python skeleton.
+- I chose to use dataclasses for Task and Pet to make the objects easier to define and extend later.
+- I also kept the Scheduler methods lightweight at this stage, since the focus for Phase 1 was on structure rather than full scheduling logic.
 
 **b. Design changes**
 
@@ -33,7 +42,10 @@
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+
+- Tradeoff: The scheduler currently detects conflicts using an exact-time match (tasks with identical `HH:MM` times). It does not attempt to detect overlapping tasks based on duration or more complex calendar semantics.
+
+- Why reasonable: Exact-time conflict detection is lightweight and easy to reason about; it gives immediate, actionable warnings without requiring task duration parsing, timezone handling, or a more complex interval-overlap algorithm. For many simple pet-care scenarios (fixed feeding/walk times), exact matches catch the most common problems while keeping the scheduler simple and predictable.
 
 ---
 

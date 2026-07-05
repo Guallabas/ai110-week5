@@ -138,10 +138,17 @@ class Scheduler:
         if freq not in ("daily", "weekly"):
             return None
 
-        # compute next date
-        today = date.today()
+        # compute next date: prefer basing off the task's own date if present
+        try:
+            if task.date:
+                base_date = date.fromisoformat(task.date)
+            else:
+                base_date = date.today()
+        except Exception:
+            base_date = date.today()
+
         delta = timedelta(days=1) if freq == "daily" else timedelta(weeks=1)
-        next_date = today + delta
+        next_date = base_date + delta
 
         new_task = Task(
             description=task.description,
